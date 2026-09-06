@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@admin/*": ["./src/components/admin/*"],
+      "@website/*": ["./src/components/website/*"]
+    }
+  }
+}
