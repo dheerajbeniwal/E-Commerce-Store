@@ -13,6 +13,10 @@ export const create = async (req, res) => {
   try {
     const { name, slug } = req.body;
 
+    if (!name || !slug) {
+      return sendBadRequest(res, "Name and slug are required");
+    }
+
     const category = await categorymodel.findOne({ name });
 
     if (category) {
@@ -23,7 +27,9 @@ export const create = async (req, res) => {
 
     return sendCreated(res, "Category created successfully");
   } catch (error) {
-    return sendServerError(res, error);
+    console.error("Error creating category:", error);
+
+    return sendServerError(res, "Failed to create category");
   }
 };
 
@@ -34,7 +40,9 @@ export const read = async (req, res) => {
 
     return sendSuccess(res, "Categories found successfully", categories);
   } catch (error) {
-    return sendServerError(res, error);
+    console.error("Error fetching categories:", error);
+
+    return sendServerError(res, "Failed to fetch categories");
   }
 };
 
@@ -49,7 +57,9 @@ export const readbyid = async (req, res) => {
 
     return sendSuccess(res, "Category found successfully", category);
   } catch (error) {
-    return sendBadRequest(res, "Invalid category id");
+    console.error("Error fetching category:", error);
+
+    return sendServerError(res, "Failed to fetch category");
   }
 };
 
@@ -64,7 +74,9 @@ export const deletebyid = async (req, res) => {
 
     return sendSuccess(res, "Category deleted successfully", category);
   } catch (error) {
-    return sendBadRequest(res, "Invalid category id");
+    console.error("Error deleting category:", error);
+
+    return sendServerError(res, "Failed to delete category");
   }
 };
 
@@ -83,7 +95,9 @@ export const status = async (req, res) => {
 
     return sendSuccess(res, "Category status updated successfully", category);
   } catch (error) {
-    return sendBadRequest(res, "Invalid category id");
+    console.error("Error updating category status:", error);
+
+    return sendServerError(res, "Failed to update category status");
   }
 };
 
@@ -105,6 +119,8 @@ export const update = async (req, res) => {
 
     return sendSuccess(res, "Category updated successfully", category);
   } catch (error) {
-    return sendBadRequest(res, "Invalid category id or duplicate category");
+    console.error("Error updating category:", error);
+
+    return sendServerError(res, "Failed to update category");
   }
 };

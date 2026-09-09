@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Tag, Link2, Upload, X, Save } from "lucide-react";
 import { slugify } from "@/utils/helper";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function AddCategoryPage() {
   const [name, setName] = useState("");
@@ -54,15 +55,16 @@ export default function AddCategoryPage() {
 
       console.log("Category created:", response.data);
 
-      console.log({
-        name,
-        slug,
-        image,
-      });
+      toast.success("Category created successfully!");
     } catch (error) {
       console.error("Error creating category:", error);
+
+      toast.error(
+        error.response?.data?.message || "Failed to create category!",
+      );
     }
   };
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Back Link */}
