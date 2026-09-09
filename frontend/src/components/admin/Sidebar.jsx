@@ -18,7 +18,7 @@ const menuItems = [
   {
     name: "Dashboard",
     icon: <FiGrid />,
-    path: "/admin",
+    path: "/admin/dashboard",
   },
   {
     name: "Category",
