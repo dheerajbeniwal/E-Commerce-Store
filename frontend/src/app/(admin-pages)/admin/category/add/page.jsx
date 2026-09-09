@@ -1,34 +1,80 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Tag, Link2, Upload, X, Save } from "lucide-react";
+import { slugify } from "@/utils/helper";
+import axios from "axios";
 
 export default function AddCategoryPage() {
-  const handleChange = (e) => {
-    // Handle input changes here
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [image, setImage] = useState(null);
+
+  // Category name change
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setName(value);
+    setSlug(slugify(value));
   };
 
-  const handleFileChange = (e) => {
-    // Handle file change here
+  // Slug change
+  const handleSlugChange = (e) => {
+    setSlug(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  // Image change
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      setImage(file);
+    }
+  };
+
+  // Remove image
+  const handleRemoveImage = () => {
+    setImage(null);
+  };
+
+  // Form submit - UI only
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submit here
-  };
 
+    const payload = {
+      name: name,
+      slug: slug,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/category/create",
+        payload,
+      );
+
+      console.log("Category created:", response.data);
+
+      console.log({
+        name,
+        slug,
+        image,
+      });
+    } catch (error) {
+      console.error("Error creating category:", error);
+    }
+  };
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Back link */}{" "}
+      {/* Back Link */}
       <Link
         href="/admin/category"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-teal-600 transition font-medium"
       >
-        {" "}
         <ArrowLeft className="w-4 h-4" />
-        Back to Categories{" "}
+        Back to Categories
       </Link>
-      {/* Page title */}
+
+      {/* Page Title */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Add New Category</h1>
 
@@ -36,7 +82,8 @@ export default function AddCategoryPage() {
           Create a new product category for your store
         </p>
       </div>
-      {/* Form Card */}
+
+      {/* Form */}
       <form
         onSubmit={handleSubmit}
         className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
@@ -53,8 +100,8 @@ export default function AddCategoryPage() {
 
               <input
                 type="text"
-                name="name"
-                onChange={handleChange}
+                value={name}
+                onChange={handleNameChange}
                 placeholder="e.g., Electronics, Fashion, Mobiles"
                 className="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:bg-white transition-all placeholder:text-gray-400"
               />
@@ -74,14 +121,14 @@ export default function AddCategoryPage() {
 
               <input
                 type="text"
-                name="slug"
-                onChange={handleChange}
-                placeholder="category-slug"
-                className="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:bg-white transition-all placeholder:text-gray-400"
+                value={slug}
+                onChange={handleSlugChange}
+                placeholder="auto-generated-slug"
+                className="w-full pl-10 pr-4 py-3 text-sm bg-gray-100 border border-gray-200 rounded-xl text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 transition-all placeholder:text-gray-400"
               />
             </div>
 
-            <p className="text-xs text-gray-400">URL-friendly category name</p>
+            <p className="text-xs text-gray-400">URL-friendly name</p>
           </div>
 
           {/* Category Image */}
@@ -90,27 +137,50 @@ export default function AddCategoryPage() {
               Category Image <span className="text-red-500">*</span>
             </label>
 
-            <div className="flex flex-col items-center justify-center gap-3 w-full h-44 rounded-xl border-2 border-dashed cursor-pointer transition-all border-gray-200 bg-gray-50 hover:border-teal-400 hover:bg-teal-50/30">
-              <div className="p-3 rounded-full bg-gray-100">
-                <Upload className="w-6 h-6 text-gray-400" />
+            {image ? (
+              <div className="relative w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                <div className="w-full h-52 flex items-center justify-center">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Category preview"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-md border border-gray-200 hover:bg-red-50 hover:border-red-200 transition"
+                >
+                  <X className="w-4 h-4 text-gray-500" />
+                </button>
               </div>
+            ) : (
+              <label
+                htmlFor="category-image"
+                className="flex flex-col items-center justify-center gap-3 w-full h-44 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-teal-400 hover:bg-teal-50/30 cursor-pointer transition-all"
+              >
+                <div className="p-3 rounded-full bg-gray-100">
+                  <Upload className="w-6 h-6 text-gray-400" />
+                </div>
 
-              <div className="text-center">
-                <p className="text-sm font-medium text-gray-600">
-                  Click to upload
-                </p>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-gray-600">
+                    Click to upload
+                  </p>
 
-                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP</p>
-              </div>
+                  <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP</p>
+                </div>
 
-              <input
-                type="file"
-                name="image"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-            </div>
+                <input
+                  id="category-image"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            )}
           </div>
         </div>
 

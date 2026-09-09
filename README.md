@@ -59,14 +59,14 @@ npm run lint
 
 The category API is available under `/api/category`:
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `GET` | `/api/category` | Get all categories |
-| `GET` | `/api/category/:id` | Get a category by ID |
-| `POST` | `/api/category/create` | Create a category |
-| `PUT` | `/api/category/update/:id` | Update a category |
-| `PATCH` | `/api/category/status/:id` | Toggle category status |
-| `DELETE` | `/api/category/delete/:id` | Delete a category |
+| Method   | Endpoint                   | Description            |
+| -------- | -------------------------- | ---------------------- |
+| `GET`    | `/api/category`            | Get all categories     |
+| `GET`    | `/api/category/:id`        | Get a category by ID   |
+| `POST`   | `/api/category/create`     | Create a category      |
+| `PUT`    | `/api/category/update/:id` | Update a category      |
+| `PATCH`  | `/api/category/status/:id` | Toggle category status |
+| `DELETE` | `/api/category/delete/:id` | Delete a category      |
 
 ## Security
 

@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js";
+import connectDB from "./config/connectDB.js";
 import categoryRouter from "./routers/categoryRouters.js";
 
 dotenv.config();
@@ -12,7 +12,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use("/api/category", categoryRouter);
 

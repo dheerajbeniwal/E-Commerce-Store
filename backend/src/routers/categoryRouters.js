@@ -9,7 +9,7 @@ import {
   deletebyid,
   status,
   update,
-} from "../controlers/category.controller.js";
+} from "../controllers/category.controller.js";
 
 router.post("/create", create);
 
