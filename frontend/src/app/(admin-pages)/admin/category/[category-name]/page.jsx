@@ -55,7 +55,7 @@ function ActionMenu({ onEdit, onDelete, onToggleStatus, status }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-2xl border border-gray-100 z-999 overflow-hidden">
+        <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-2xl border border-gray-100 z-[999] overflow-hidden">
           <button
             onClick={() => {
               onEdit();

@@ -1,340 +1,291 @@
-// app/admin/page.jsx
-"use client";
-
-import { useState } from "react";
 import {
+  Download,
+  DollarSign,
   ShoppingBag,
   Users,
   Package,
-  TrendingUp,
-  Eye,
-  ShoppingCart,
   Star,
-  Clock,
-  ChevronRight,
-  Download,
-  Filter,
-  MoreVertical,
-  CreditCard,
+  Plus,
   Truck,
-  ArrowUp,
-  ArrowDown,
-  DollarSign,
+  CreditCard,
+  MoreVertical,
+  Filter,
 } from "lucide-react";
 
-export default function AdminDashboard() {
-  const [period, setPeriod] = useState("today");
-
-  // Stats Data
+const Page = () => {
   const stats = [
     {
       title: "Total Revenue",
       value: "$48,295",
-      change: "+12.5%",
-      icon: DollarSign,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
-      trend: "up",
+      change: "+12.5% ↑",
+      icon: <DollarSign size={19} />,
+      bg: "bg-emerald-100 text-emerald-600",
+      isPositive: true,
     },
     {
       title: "Total Orders",
       value: "1,284",
-      change: "+8.2%",
-      icon: ShoppingBag,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
-      trend: "up",
+      change: "+8.2% ↑",
+      icon: <ShoppingBag size={19} />,
+      bg: "bg-blue-100 text-blue-600",
+      isPositive: true,
     },
     {
       title: "Total Customers",
       value: "5,643",
-      change: "+23.1%",
-      icon: Users,
-      color: "text-purple-600",
-      bg: "bg-purple-50",
-      trend: "up",
+      change: "+23.1% ↑",
+      icon: <Users size={19} />,
+      bg: "bg-purple-100 text-purple-600",
+      isPositive: true,
     },
     {
       title: "Products",
       value: "847",
-      change: "-2.4%",
-      icon: Package,
-      color: "text-orange-600",
-      bg: "bg-orange-50",
-      trend: "down",
+      change: "-2.4% ↓",
+      icon: <Package size={19} />,
+      bg: "bg-amber-100 text-amber-600",
+      isPositive: false,
     },
   ];
 
-  // Recent Orders
-  const recentOrders = [
+  const products = [
+    {
+      name: "Wireless Headphones",
+      sales: "342 sales",
+      amount: "$10,260",
+      rating: "4.8",
+      emoji: "🎧",
+    },
+    {
+      name: "Smart Watch Pro",
+      sales: "289 sales",
+      amount: "$11,560",
+      rating: "4.8",
+      emoji: "⌚",
+    },
+    {
+      name: "Laptop Backpack",
+      sales: "245 sales",
+      amount: "$7,350",
+      rating: "4.8",
+      emoji: "🎒",
+    },
+    {
+      name: "USB-C Hub",
+      sales: "198 sales",
+      amount: "$3,960",
+      rating: "4.8",
+      emoji: "🔌",
+    },
+  ];
+
+  const orders = [
     {
       id: "#ORD-001",
       customer: "Sarah Johnson",
+      items: "3 items",
       amount: "$245.00",
       status: "Delivered",
-      date: "2 hours ago",
-      items: 3,
+      time: "2 hours ago",
     },
     {
       id: "#ORD-002",
       customer: "Michael Chen",
+      items: "2 items",
       amount: "$189.50",
       status: "Processing",
-      date: "4 hours ago",
-      items: 2,
+      time: "4 hours ago",
     },
     {
       id: "#ORD-003",
-      customer: "Emily Davis",
-      amount: "$432.00",
-      status: "Shipped",
-      date: "6 hours ago",
-      items: 5,
-    },
-    {
-      id: "#ORD-004",
-      customer: "James Wilson",
-      amount: "$167.80",
-      status: "Pending",
-      date: "8 hours ago",
-      items: 1,
-    },
-    {
-      id: "#ORD-005",
-      customer: "Maria Garcia",
-      amount: "$523.00",
+      customer: "Emma Williams",
+      items: "4 items",
+      amount: "$329.00",
       status: "Delivered",
-      date: "12 hours ago",
-      items: 4,
+      time: "5 hours ago",
     },
   ];
-
-  // Top Products
-  const topProducts = [
-    {
-      name: "Wireless Headphones",
-      sales: 342,
-      revenue: "$10,260",
-      image: "🎧",
-    },
-    { name: "Smart Watch Pro", sales: 289, revenue: "$11,560", image: "⌚" },
-    { name: "Laptop Backpack", sales: 245, revenue: "$7,350", image: "🎒" },
-    { name: "USB-C Hub", sales: 198, revenue: "$3,960", image: "🔌" },
-  ];
-
-  const getStatusColor = (status) => {
-    const colors = {
-      Delivered: "bg-emerald-100 text-emerald-700",
-      Processing: "bg-blue-100 text-blue-700",
-      Shipped: "bg-purple-100 text-purple-700",
-      Pending: "bg-yellow-100 text-yellow-700",
-    };
-    return colors[status] || "bg-gray-100 text-gray-700";
-  };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500">
-            Welcome back! Here's what's happening with your store.
-          </p>
-        </div>
+    <div className="min-h-screen  bg-gray-50 text-gray-800 p-6 space-y-6">
+      {/* Page Heading */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex bg-white rounded-lg border border-gray-200 p-1">
-            {["today", "week", "month"].map((p) => (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
-                  period === p
-                    ? "bg-teal-600 text-white"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                {p.charAt(0).toUpperCase() + p.slice(1)}
-              </button>
-            ))}
+          <div className="flex bg-gray-200/60 p-1 rounded-lg text-sm font-medium text-gray-600">
+            <button className="px-3 py-1 bg-white text-gray-900 rounded-md shadow-sm">
+              Today
+            </button>
+            <button className="px-3 py-1 hover:text-gray-900">Week</button>
+            <button className="px-3 py-1 hover:text-gray-900">Month</button>
           </div>
-          <button className="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition flex items-center gap-2">
-            <Download className="w-4 h-4" />
+
+          <button className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            <Download size={16} />
             Export
           </button>
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
+        {stats.map((stat) => (
           <div
-            key={index}
-            className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+            className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-3"
+            key={stat.title}
           >
             <div className="flex items-center justify-between">
-              <div
-                className={`w-10 h-10 ${stat.bg} rounded-lg flex items-center justify-center`}
-              >
-                <stat.icon className={`w-5 h-5 ${stat.color}`} />
-              </div>
+              <div className={`p-2.5 rounded-lg ${stat.bg}`}>{stat.icon}</div>
               <span
-                className={`text-sm font-medium flex items-center gap-1 ${
-                  stat.trend === "up" ? "text-emerald-600" : "text-red-600"
-                }`}
+                className={`text-xs font-semibold px-2 py-1 rounded-full ${stat.isPositive ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}
               >
                 {stat.change}
-                {stat.trend === "up" ? (
-                  <ArrowUp className="w-3 h-3" />
-                ) : (
-                  <ArrowDown className="w-3 h-3" />
-                )}
               </span>
             </div>
-            <div className="mt-3">
-              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-              <p className="text-sm text-gray-500">{stat.title}</p>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
+              <p className="text-xs text-gray-500">{stat.title}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Charts & Activity */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sales Chart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Sales Overview
-            </h2>
-            <button className="text-sm text-teal-600 hover:text-teal-700 font-medium flex items-center gap-1">
-              View All <ChevronRight className="w-4 h-4" />
+        <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-bold text-gray-900">Sales Overview</h3>
+            <button className="text-xs font-semibold text-blue-600 hover:underline">
+              View All →
             </button>
           </div>
 
-          {/* Simple bar chart representation */}
-          <div className="h-64 flex items-end gap-2">
-            {[42, 68, 55, 87, 72, 94, 65, 88, 76, 95, 82, 60].map(
-              (height, i) => (
-                <div
-                  key={i}
-                  className="flex-1 flex flex-col items-center gap-2"
-                >
+          <div className="h-48 flex flex-col justify-between">
+            <div className="flex items-end justify-between h-36 border-b border-gray-100 pb-2 px-2 gap-2">
+              {[35, 55, 45, 70, 50, 80, 65, 90, 58, 75, 68, 85].map(
+                (height, index) => (
                   <div
-                    className="w-full bg-teal-500 rounded-t-lg hover:bg-teal-600 transition-all duration-300"
-                    style={{ height: `${height * 0.6}%` }}
-                  />
-                  <span className="text-xs text-gray-500">
-                    {
-                      [
-                        "Jan",
-                        "Feb",
-                        "Mar",
-                        "Apr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Aug",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dec",
-                      ][i]
-                    }
-                  </span>
-                </div>
-              ),
-            )}
+                    key={index}
+                    className="w-full bg-blue-50 hover:bg-blue-100 rounded-t h-full flex items-end transition-colors"
+                  >
+                    <div
+                      className="w-full bg-blue-600 rounded-t transition-all"
+                      style={{ height: `${height}%` }}
+                    ></div>
+                  </div>
+                ),
+              )}
+            </div>
+            <div className="flex justify-between text-[11px] text-gray-400 px-1 pt-2">
+              {[
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ].map((month) => (
+                <span key={month}>{month}</span>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Top Products */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Top Products
-            </h2>
-            <button className="text-sm text-teal-600 hover:text-teal-700 font-medium">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-gray-900">Top Products</h3>
+            <button className="text-xs font-semibold text-blue-600 hover:underline">
               View All
             </button>
           </div>
-          <div className="space-y-4">
-            {topProducts.map((product, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-2xl">
-                  {product.image}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {product.name}
-                  </p>
-                  <div className="flex items-center gap-3 text-xs text-gray-500">
-                    <span>{product.sales} sales</span>
-                    <span>{product.revenue}</span>
+
+          <div className="space-y-3">
+            {products.map((product) => (
+              <div
+                className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                key={product.name}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xl bg-gray-100 p-2 rounded-lg">
+                    {product.emoji}
+                  </span>
+                  <div className="flex flex-col">
+                    <strong className="text-xs font-semibold text-gray-900">
+                      {product.name}
+                    </strong>
+                    <span className="text-[11px] text-gray-500">
+                      {product.sales} • {product.amount}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm font-medium text-gray-700">4.8</span>
+                <div className="flex items-center gap-1 text-amber-500 text-xs font-semibold bg-amber-50 px-2 py-1 rounded">
+                  <Star size={12} fill="currentColor" />
+                  {product.rating}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Recent Orders & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Orders Table */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Recent Orders
-              </h2>
-              <div className="flex items-center gap-3">
-                <button className="p-2 hover:bg-gray-100 rounded-lg transition">
-                  <Filter className="w-4 h-4 text-gray-500" />
-                </button>
-                <button className="text-sm text-teal-600 hover:text-teal-700 font-medium">
-                  View All
-                </button>
-              </div>
+        {/* Recent Orders */}
+        <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-100 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-bold text-gray-900">Recent Orders</h3>
+            <div className="flex gap-2">
+              <button className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg border border-gray-200">
+                <Filter size={15} />
+              </button>
+              <button className="text-xs font-semibold text-blue-600 hover:underline">
+                View All
+              </button>
             </div>
           </div>
-          <div className="divide-y divide-gray-100">
-            {recentOrders.map((order) => (
+
+          <div className="space-y-3">
+            {orders.map((order) => (
               <div
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border border-gray-100 rounded-lg gap-3 hover:border-gray-200 transition-all"
                 key={order.id}
-                className="p-4 hover:bg-gray-50 transition flex items-center justify-between"
               >
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <ShoppingCart className="w-4 h-4 text-gray-600" />
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gray-100 text-gray-600 rounded-lg">
+                    <ShoppingBag size={16} />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900">
+                  <div className="flex flex-col">
+                    <strong className="text-xs text-gray-900">
                       {order.id}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {order.customer} • {order.items} items
-                    </p>
+                    </strong>
+                    <span className="text-xs text-gray-500">
+                      {order.customer} • {order.items}
+                    </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-semibold text-gray-900">
+
+                <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+                  <strong className="text-xs text-gray-900">
                     {order.amount}
-                  </span>
+                  </strong>
+
                   <span
-                    className={`px-2.5 py-1 text-xs font-medium rounded-full ${getStatusColor(order.status)}`}
+                    className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
+                      order.status === "Delivered"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-amber-100 text-amber-700"
+                    }`}
                   >
                     {order.status}
                   </span>
-                  <span className="text-xs text-gray-400 hidden sm:block">
-                    {order.date}
-                  </span>
-                  <button className="p-1 hover:bg-gray-100 rounded-lg transition">
-                    <MoreVertical className="w-4 h-4 text-gray-400" />
+
+                  <span className="text-xs text-gray-400">{order.time}</span>
+                  <button className="text-gray-400 hover:text-gray-600">
+                    <MoreVertical size={16} />
                   </button>
                 </div>
               </div>
@@ -343,80 +294,32 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="space-y-4">
-          <div className="bg-gradient-to-br from-teal-600 to-teal-700 p-6 rounded-xl text-white">
-            <h3 className="font-semibold text-lg">Quick Actions</h3>
-            <p className="text-teal-100 text-sm mt-1">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 className="font-bold text-gray-900">Quick Actions</h3>
+            <p className="text-xs text-gray-500 mb-4">
               Manage your store efficiently
             </p>
-            <div className="mt-4 space-y-2">
-              <button className="w-full bg-white/20 hover:bg-white/30 rounded-lg px-4 py-2.5 text-sm font-medium transition flex items-center gap-3">
-                <Plus className="w-4 h-4" />
-                Add New Product
-              </button>
-              <button className="w-full bg-white/20 hover:bg-white/30 rounded-lg px-4 py-2.5 text-sm font-medium transition flex items-center gap-3">
-                <Truck className="w-4 h-4" />
-                Process Orders
-              </button>
-              <button className="w-full bg-white/20 hover:bg-white/30 rounded-lg px-4 py-2.5 text-sm font-medium transition flex items-center gap-3">
-                <CreditCard className="w-4 h-4" />
-                Manage Payments
-              </button>
-            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-900">
-              Store Performance
-            </h3>
-            <div className="mt-3 space-y-3">
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Conversion Rate</span>
-                  <span className="font-medium text-gray-900">3.8%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
-                  <div
-                    className="bg-teal-600 h-1.5 rounded-full"
-                    style={{ width: "38%" }}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Customer Satisfaction</span>
-                  <span className="font-medium text-gray-900">4.7/5</span>
-                </div>
-                <div className="flex items-center gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`w-4 h-4 ${star <= 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-200"}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
+          <div className="space-y-2">
+            <button className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs py-2.5 rounded-lg transition-colors">
+              <Plus size={16} />
+              Add New Product
+            </button>
+            <button className="w-full flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs py-2.5 rounded-lg transition-colors">
+              <Truck size={16} />
+              Process Orders
+            </button>
+            <button className="w-full flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs py-2.5 rounded-lg transition-colors">
+              <CreditCard size={16} />
+              Manage Payments
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-// Add Plus icon since it's used
-const Plus = ({ className }) => (
-  <svg
-    className={className}
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M12 4v16m8-8H4"
-    />
-  </svg>
-);
+export default Page;
