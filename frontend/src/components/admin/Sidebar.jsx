@@ -1,226 +1,226 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
 import {
-  LayoutGrid,
-  Tag,
-  ShoppingBag,
-  BedDouble,
-  Palette,
-  Settings,
-  PanelLeftClose,
-  LogOut,
-} from "lucide-react";
+  FiGrid,
+  FiTag,
+  FiBox,
+  FiMonitor,
+  FiDroplet,
+  FiSettings,
+  FiLogOut,
+  FiMenu,
+} from "react-icons/fi";
 
-const mainMenu = [
-  { label: "Dashboard", icon: LayoutGrid, href: "/admin" },
-  { label: "Category", icon: Tag, href: "/admin/category" },
-  { label: "Rooms-type", icon: BedDouble, href: "/admin/rooms-type" },
-  { label: "Products", icon: ShoppingBag, href: "/admin/products" },
-  { label: "Orders", icon: Palette, href: "/admin/orders" },
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+
+const menuItems = [
+  {
+    name: "Dashboard",
+    icon: <FiGrid />,
+    path: "/admin/dashboard",
+  },
+  {
+    name: "Category",
+    icon: <FiTag />,
+    path: "/admin/category",
+  },
+  {
+    name: "Products",
+    icon: <FiBox />,
+    path: "/admin/products",
+  },
+  {
+    name: "Rooms",
+    icon: <FiMonitor />,
+    path: "/admin/rooms",
+  },
+  {
+    name: "Colors",
+    icon: <FiDroplet />,
+    path: "/admin/colors",
+  },
 ];
 
-const systemMenu = [{ label: "Settings", icon: Settings, href: "/settings" }];
-
-function isActiveRoute(pathname, href) {
-  if (href === "/admin") {
-    return pathname === "/admin";
-  }
-
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-export default function Sidebar() {
+function Sidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
 
-  const toggleSidebar = () => setCollapsed((prev) => !prev);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const handleNavigate = (path) => {
+    router.push(path);
+  };
 
   return (
     <aside
-      className={`flex h-screen flex-col justify-between border-r border-white/5 bg-[#0b1120] text-slate-300 shadow-2xl shadow-slate-950/20 transition-all duration-300 ${
-        collapsed ? "w-20" : "w-64"
+      className={`h-screen bg-[#0b1a29] text-white flex flex-col border-r border-[#172838] transition-all duration-300 ${
+        isOpen ? "w-64" : "w-20"
       }`}
     >
-      <div>
-        <div className="flex items-center justify-between px-3 py-5">
-          {!collapsed && (
-            <div className="flex items-center gap-3 overflow-hidden">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-teal-400 to-emerald-600 shadow-lg shadow-emerald-900/40">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
-                  <path d="M12 12 15 9" />
-                  <path d="M12 4v1" />
-                </svg>
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold leading-tight text-white">
-                  AdminPanel
-                </p>
-                <p className="text-xs font-medium leading-tight text-teal-400">
-                  Pro Dashboard
-                </p>
-              </div>
+      {/* Header */}
+      <div
+        className={`h-[72px] px-4 flex items-center border-b border-[#172838] ${
+          isOpen ? "justify-between" : "justify-center"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          {/* Logo */}
+          <div className="w-11 h-11 shrink-0 rounded-[14px] bg-gradient-to-br from-[#08cfc0] to-[#00a99d] flex items-center justify-center text-lg">
+            <FiMonitor />
+          </div>
+
+          {/* Logo Text */}
+          {isOpen && (
+            <div>
+              <h1 className="text-[15px] font-bold leading-5">AdminPanel</h1>
+
+              <p className="text-[#00c9bd] text-[10px] mt-1">Pro Dashboard</p>
             </div>
           )}
-
-          {collapsed && (
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-teal-400 to-emerald-600 shadow-lg shadow-emerald-900/40">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-5 w-5"
-              >
-                <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
-                <path d="M12 12 15 9" />
-                <path d="M12 4v1" />
-              </svg>
-            </div>
-          )}
-
-          <button
-            type="button"
-            aria-label="Collapse sidebar"
-            onClick={toggleSidebar}
-            className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
-          >
-            <PanelLeftClose
-              className={`h-4 w-4 transition-transform duration-300 ${
-                collapsed ? "rotate-180" : "rotate-0"
-              }`}
-            />
-          </button>
         </div>
 
-        <nav className="mt-4 px-3">
-          {!collapsed && (
-            <p className="px-3 pb-2 text-[11px] font-semibold tracking-wider text-slate-500">
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`text-[#91a4b9] text-xl hover:text-white transition-colors ${
+            !isOpen ? "absolute top-5 right-5" : ""
+          }`}
+        >
+          <FiMenu />
+        </button>
+      </div>
+
+      {/* Menu Area */}
+      <div className="flex-1 px-3 py-7 ">
+        {/* Main Menu */}
+        <div>
+          {isOpen && (
+            <p className="text-[#6c7f96] text-xs font-bold tracking-[1.5px] px-3 mb-5">
               MAIN MENU
             </p>
           )}
 
-          <ul className="space-y-1">
-            {mainMenu.map(({ label, icon: Icon, href }) => {
-              const isActive = isActiveRoute(pathname, href);
+          <nav className="space-y-2">
+            {menuItems.map((item) => {
+              const isActive =
+                pathname === item.path || pathname.startsWith(`${item.path}/`);
 
               return (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    title={collapsed ? label : ""}
-                    className={`group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                      collapsed ? "justify-center" : "gap-3"
-                    } ${
+                <button
+                  key={item.name}
+                  onClick={() => handleNavigate(item.path)}
+                  title={!isOpen ? item.name : ""}
+                  className={`relative w-full h-14 flex items-center rounded-[16px] text-left transition-all duration-200 ${
+                    isOpen ? "gap-4 px-4" : "justify-center px-0"
+                  } ${
+                    isActive
+                      ? "bg-[#0d3943] border border-[#09606b] text-[#00d4c7]"
+                      : "text-[#93a6bb] hover:bg-[#102536]"
+                  }`}
+                >
+                  {/* Active Indicator */}
+                  {isActive && (
+                    <span className="absolute left-0 top-4 h-6 w-1 rounded-r bg-[#00d4c7]" />
+                  )}
+
+                  {/* Icon */}
+                  <span
+                    className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-[22px] ${
                       isActive
-                        ? "bg-emerald-500/10 text-teal-300"
-                        : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                        ? "bg-[#075a61] text-[#00d4c7]"
+                        : "text-[#91a4b9]"
                     }`}
                   >
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-teal-400" />
-                    )}
-                    <Icon
-                      className={`h-4 w-4 shrink-0 ${
-                        isActive
-                          ? "text-teal-300"
-                          : "text-slate-500 group-hover:text-slate-300"
-                      }`}
-                    />
-                    {!collapsed && <span>{label}</span>}
-                  </Link>
-                </li>
+                    {item.icon}
+                  </span>
+
+                  {/* Name */}
+                  {isOpen && (
+                    <span className="text-[15px] font-medium">{item.name}</span>
+                  )}
+                </button>
               );
             })}
-          </ul>
+          </nav>
+        </div>
 
-          {!collapsed && (
-            <p className="mt-6 px-3 pb-2 text-[11px] font-semibold tracking-wider text-slate-500">
+        {/* System */}
+        <div className="mt-7 pt-5 border-t border-[#172838]">
+          {isOpen && (
+            <p className="text-[#6c7f96] text-xs font-bold tracking-[1.5px] px-3 mb-5">
               SYSTEM
             </p>
           )}
 
-          <ul className="space-y-1">
-            {systemMenu.map(({ label, icon: Icon, href }) => {
-              const isActive = isActiveRoute(pathname, href);
+          <button
+            onClick={() => handleNavigate("/admin/settings")}
+            title={!isOpen ? "Settings" : ""}
+            className={`relative w-full h-14 flex items-center rounded-[16px] text-left transition-all duration-200 ${
+              isOpen ? "gap-4 px-4" : "justify-center px-0"
+            } ${
+              pathname === "/admin/settings"
+                ? "bg-[#0d3943] border border-[#09606b] text-[#00d4c7]"
+                : "text-[#71869e] hover:bg-[#102536]"
+            }`}
+          >
+            {/* Active Indicator */}
+            {pathname === "/admin/settings" && (
+              <span className="absolute left-0 top-4 h-6 w-1 rounded-r bg-[#00d4c7]" />
+            )}
 
-              return (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    title={collapsed ? label : ""}
-                    className={`group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                      collapsed ? "justify-center" : "gap-3"
-                    } ${
-                      isActive
-                        ? "bg-emerald-500/10 text-teal-300"
-                        : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-teal-400" />
-                    )}
-                    <Icon
-                      className={`h-4 w-4 shrink-0 ${
-                        isActive
-                          ? "text-teal-300"
-                          : "text-slate-500 group-hover:text-slate-300"
-                      }`}
-                    />
-                    {!collapsed && <span>{label}</span>}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+            {/* Icon */}
+            <span className="w-10 h-10 shrink-0 flex items-center justify-center text-[22px]">
+              <FiSettings />
+            </span>
+
+            {/* Name */}
+            {isOpen && (
+              <span className="text-[15px] font-medium">Settings</span>
+            )}
+          </button>
+        </div>
       </div>
 
-      <div className="border-t border-white/5 px-3 py-4">
-        <div
-          className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
-        >
+      {/* Admin Profile */}
+      <div
+        className={`h-[90px] border-t border-[#172838] flex items-center ${
+          isOpen ? "px-5 justify-between" : "px-0 justify-center"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          {/* Avatar */}
           <div className="relative">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-teal-400 to-emerald-600 text-sm font-semibold text-white">
+            <div className="w-11 h-11 rounded-full bg-[#078d88] border-2 border-[#075c68] flex items-center justify-center text-lg font-bold">
               A
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0b1120]" />
+
+            {/* Online Status */}
+            <span className="absolute right-[-2px] bottom-0 w-3.5 h-3.5 rounded-full bg-[#00d6a5] border-2 border-[#0b1a29]" />
           </div>
 
-          {!collapsed && (
-            <>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-white">
-                  Admin
-                </p>
-                <p className="truncate text-xs text-slate-500">Super Admin</p>
-              </div>
-              <button
-                type="button"
-                aria-label="Log out"
-                className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </>
+          {/* User Info */}
+          {isOpen && (
+            <div>
+              <h3 className="text-[15px] font-bold">Admin</h3>
+
+              <p className="text-[#71869e] text-xs mt-1">Super Admin</p>
+            </div>
           )}
         </div>
+
+        {/* Logout */}
+        {isOpen && (
+          <button
+            className="text-[#71869e] text-xl hover:text-white transition-colors"
+            title="Logout"
+          >
+            <FiLogOut />
+          </button>
+        )}
       </div>
     </aside>
   );
 }
+
+export default Sidebar;

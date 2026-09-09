@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Tag, Link2, Upload, X, Save } from "lucide-react";
-import { slugify } from "@/utils/helper";
-import axios from "axios";
+import { slugify, client } from "@/utils/helper";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function AddCategoryPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [image, setImage] = useState(null);
@@ -48,14 +49,13 @@ export default function AddCategoryPage() {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/category/create",
-        payload,
-      );
+      const response = await client.post(`api/category/create`, payload);
 
       console.log("Category created:", response.data);
 
       toast.success("Category created successfully!");
+
+      router.push("/admin/category");
     } catch (error) {
       console.error("Error creating category:", error);
 
