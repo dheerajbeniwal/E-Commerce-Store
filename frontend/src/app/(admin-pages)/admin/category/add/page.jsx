@@ -49,7 +49,7 @@ export default function AddCategoryPage() {
     };
 
     try {
-      const response = await client.post(`api/category/create`, payload);
+      const response = await client.post(`category/create`, payload);
 
       console.log("Category created:", response.data);
 
