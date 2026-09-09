@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Tag, Link2, Upload, X, Save } from "lucide-react";
-import { slugify, client } from "@/utils/helper";
 import { toast } from "sonner";
+import { slugify, client } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 
 export default function AddCategoryPage() {
@@ -27,8 +27,7 @@ export default function AddCategoryPage() {
 
   // Image change
   const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-
+    const file = e.target.files[0];
     if (file) {
       setImage(file);
     }
@@ -39,30 +38,24 @@ export default function AddCategoryPage() {
     setImage(null);
   };
 
-  // Form submit - UI only
-  const handleSubmit = async (e) => {
+  const submitHanlder = (e) => {
     e.preventDefault();
+    const form = new FormData();
+    form.append("name", name);
+    form.append("slug", slug);
+    form.append("image", image);
 
-    const payload = {
-      name: name,
-      slug: slug,
-    };
-
-    try {
-      const response = await client.post(`category/create`, payload);
-
-      console.log("Category created:", response.data);
-
-      toast.success("Category created successfully!");
-
-      router.push("/admin/category");
-    } catch (error) {
-      console.error("Error creating category:", error);
-
-      toast.error(
-        error.response?.data?.message || "Failed to create category!",
-      );
-    }
+    client
+      .post(`category/create`, form)
+      .then((response) => {
+        if (response.data.success) {
+          toast.success(response.data.message);
+          router.push("/admin/category");
+        }
+      })
+      .catch((error) => {
+        toast.error("Internal Server Error");
+      });
   };
 
   return (
@@ -87,7 +80,7 @@ export default function AddCategoryPage() {
 
       {/* Form */}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={submitHanlder}
         className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
       >
         <div className="p-6 space-y-6">
