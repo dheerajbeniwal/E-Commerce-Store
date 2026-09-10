@@ -2,65 +2,62 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Tag, Link2, Upload, X, Save } from "lucide-react";
+import { ArrowLeft, Tag, Link2, Upload, Save } from "lucide-react";
 import { toast } from "sonner";
 import { slugify, client } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 
 export default function AddCategoryPage() {
   const router = useRouter();
+
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [image, setImage] = useState(null);
 
-  // Category name change
-  const handleNameChange = (e) => {
-    const value = e.target.value;
-    setName(value);
-    setSlug(slugify(value));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(e.target.value);
+
+    if (name === "name") {
+      setName(value);
+      setSlug(slugify(value));
+    }
+
+    if (name === "slug") {
+      setSlug(value);
+    }
   };
 
-  // Slug change
-  const handleSlugChange = (e) => {
-    setSlug(e.target.value);
-  };
-
-  // Image change
-  const handleImageChange = (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setImage(file);
     }
   };
 
-  // Remove image
-  const handleRemoveImage = () => {
-    setImage(null);
-  };
-
-  const submitHanlder = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData();
-    form.append("name", name);
-    form.append("slug", slug);
-    form.append("image", image);
+    const payload = {
+      name: name,
+      slug: slug,
+    };
+    try {
+      const response = await client.post("/category/create", payload);
 
-    client
-      .post(`category/create`, form)
-      .then((response) => {
-        if (response.data.success) {
-          toast.success(response.data.message);
-          router.push("/admin/category");
-        }
-      })
-      .catch((error) => {
-        toast.error("Internal Server Error");
-      });
+      if (response.data.success) {
+        toast.success(response.data.message);
+        router.push("/admin/category");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Internal Server Error");
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Back Link */}
+      {/* Back link */}
       <Link
         href="/admin/category"
         className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-teal-600 transition font-medium"
@@ -69,7 +66,7 @@ export default function AddCategoryPage() {
         Back to Categories
       </Link>
 
-      {/* Page Title */}
+      {/* Page title */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Add New Category</h1>
 
@@ -78,9 +75,9 @@ export default function AddCategoryPage() {
         </p>
       </div>
 
-      {/* Form */}
+      {/* Form Card */}
       <form
-        onSubmit={submitHanlder}
+        onSubmit={handleSubmit}
         className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
       >
         <div className="p-6 space-y-6">
@@ -95,8 +92,9 @@ export default function AddCategoryPage() {
 
               <input
                 type="text"
+                name="name"
                 value={name}
-                onChange={handleNameChange}
+                onChange={handleChange}
                 placeholder="e.g., Electronics, Fashion, Mobiles"
                 className="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:bg-white transition-all placeholder:text-gray-400"
               />
@@ -116,65 +114,51 @@ export default function AddCategoryPage() {
 
               <input
                 type="text"
+                name="slug"
                 value={slug}
-                onChange={handleSlugChange}
-                placeholder="auto-generated-slug"
-                className="w-full pl-10 pr-4 py-3 text-sm bg-gray-100 border border-gray-200 rounded-xl text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 transition-all placeholder:text-gray-400"
+                onChange={handleChange}
+                placeholder="category-slug"
+                className="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-400 focus:bg-white transition-all placeholder:text-gray-400"
               />
             </div>
 
-            <p className="text-xs text-gray-400">URL-friendly name</p>
+            <p className="text-xs text-gray-400">URL-friendly category name</p>
           </div>
 
           {/* Category Image */}
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-gray-800">
-              Category Image <span className="text-red-500">*</span>
+              Category Image
             </label>
 
-            {image ? (
-              <div className="relative w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-                <div className="w-full h-52 flex items-center justify-center">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt="Category preview"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className="absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-md border border-gray-200 hover:bg-red-50 hover:border-red-200 transition"
-                >
-                  <X className="w-4 h-4 text-gray-500" />
-                </button>
+            <label
+              htmlFor="category-image"
+              className="flex flex-col items-center justify-center gap-3 w-full h-44 rounded-xl border-2 border-dashed cursor-pointer transition-all border-gray-200 bg-gray-50 hover:border-teal-400 hover:bg-teal-50/30"
+            >
+              <div className="p-3 rounded-full bg-gray-100">
+                <Upload className="w-6 h-6 text-gray-400" />
               </div>
-            ) : (
-              <label
-                htmlFor="category-image"
-                className="flex flex-col items-center justify-center gap-3 w-full h-44 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 hover:border-teal-400 hover:bg-teal-50/30 cursor-pointer transition-all"
-              >
-                <div className="p-3 rounded-full bg-gray-100">
-                  <Upload className="w-6 h-6 text-gray-400" />
-                </div>
 
-                <div className="text-center">
-                  <p className="text-sm font-medium text-gray-600">
-                    Click to upload
-                  </p>
+              <div className="text-center">
+                <p className="text-sm font-medium text-gray-600">
+                  Click to upload
+                </p>
 
-                  <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP</p>
-                </div>
+                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP</p>
+              </div>
 
-                <input
-                  id="category-image"
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </label>
+              <input
+                id="category-image"
+                type="file"
+                name="image"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+
+            {image && (
+              <p className="text-xs text-gray-500">Selected: {image.name}</p>
             )}
           </div>
         </div>
